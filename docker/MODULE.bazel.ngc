@@ -7,6 +7,10 @@ module(
     repo_name = "org_pytorch_tensorrt",
 )
 
+# NGC container build only. PYVER_PLACEHOLDER is replaced with the container's
+# Python version (e.g. 3.12, 3.14) when this file is rendered to MODULE.bazel:
+#   sed "s/PYVER_PLACEHOLDER/${PYVER}/g" docker/MODULE.bazel.ngc > MODULE.bazel
+
 bazel_dep(name = "googletest", version = "1.14.0")
 bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_cc", version = "0.0.9")
@@ -48,7 +52,7 @@ torch_nccl_detect(name = "torch_nccl")
 new_local_repository(
     name = "torch_tensorrt",
     build_file = "@//third_party/torch_tensorrt:BUILD",
-    path = "/usr/local/lib/python3.12/dist-packages/torch_tensorrt/",
+    path = "/usr/local/lib/pythonPYVER_PLACEHOLDER/dist-packages/torch_tensorrt/",
 )
 
 
@@ -70,7 +74,7 @@ http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "ht
 
 new_local_repository(
     name = "libtorch",
-    path = "/usr/local/lib/python3.12/dist-packages/torch/",
+    path = "/usr/local/lib/pythonPYVER_PLACEHOLDER/dist-packages/torch/",
     build_file = "third_party/libtorch/BUILD"
 )
 
@@ -97,7 +101,7 @@ new_git_repository(
 # It directly references a system-installed PyTorch package, which breaks hermeticity
 new_local_repository(
     name = "torch_l4t",
-    path = "/usr/local/lib/python3.12/dist-packages/torch/",
+    path = "/usr/local/lib/pythonPYVER_PLACEHOLDER/dist-packages/torch/",
     build_file = "third_party/libtorch/BUILD"
 )
 
